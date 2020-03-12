@@ -19,8 +19,8 @@ router.get("/logout", (req, res) => {
 router.post("/login", (req, res) => {
   const email = req.body.email;
   const pw = req.body.pw;
-  var sql = `SELECT * FROM members WHERE email = '${email}' && pw = '${pw}'`;
-  con.query(sql, function(err, result) {
+  var sql = `SELECT * FROM members WHERE email = ? && pw = ?`;
+  con.query(sql, [email, pw], function(err, result) {
     if (err) {
       console.log(err);
       res.json({ message: false });
