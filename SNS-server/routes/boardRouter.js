@@ -22,7 +22,7 @@ router.get("/view", (req, res) => {
   });
 });
 
-router.post("/insert", (req, res) => {
+router.post("/insert",(req, res) => {
   const no = req.body.no;
   const title = req.body.title;
   const comments = req.body.comments;
@@ -34,6 +34,20 @@ router.post("/insert", (req, res) => {
     } else {
       console.log("1 record inserted");
       res.json({ message: "작성완료" });
+    }
+  });
+});
+
+router.post("/delete", (req, res) => {
+  const board_no = req.body.board_no;
+  var sql = `DELETE FROM board WHERE b_no = ?`;
+  con.query(sql, [board_no], function(err, result) {
+    if (err) {
+      console.log(err);
+      res.json({ message: false });
+    } else {
+      console.log("1 record deleted");
+      res.json({ message: "제거완료" });
     }
   });
 });

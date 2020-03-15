@@ -52,10 +52,11 @@ const styles = theme => ({
 class Home extends Component {
   state = {
     writeStyle: "none",
-    posts: []
+    posts: [],
+    deleteStyle: "none"
   };
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     axios
       .get("http://localhost:8080/board/view", { headers })
       .then(returnData => {
@@ -88,6 +89,25 @@ class Home extends Component {
     // alert(this._BoardNick.value);
   };
 
+  deleteBoard=(board_no, member_no)=>{
+    const login_no = Number($.cookie("login_no"));
+    if(login_no===member_no){
+      const send_param = {
+        headers,
+        board_no
+      }
+      axios.post("http://localhost:8080/board/delete", send_param)
+      .then(returnData=>{
+        alert(returnData.data.message);
+        window.location.reload();
+      })
+
+    }else{
+      alert("본인만 글 제거가 가능합니다.");
+    }
+  }
+
+
   render() {
 
     const { classes} = this.props;
@@ -98,6 +118,11 @@ class Home extends Component {
     if ($.cookie("login_email")) {
       writeStyle.display = "show";
     }
+
+    const deleteStyle = {
+      display: this.state.deleteStyle
+    };
+    const login_no = Number($.cookie("login_no"));
 
 
     return (
@@ -113,7 +138,7 @@ class Home extends Component {
               당신의 목표는?
             </Typography>
             <div className={classes.heroButtons} style={writeStyle}>
-              <Grid container spacing={2} justify="center">
+              <Grid container spacing={2} justify="center" >
                 <Grid item>
                 <TextField
           id="standard-helperText"
@@ -164,8 +189,11 @@ class Home extends Component {
                     <Button size="small" color="primary">
                       View
                     </Button>
-                    <Button size="small" color="primary">
+                    <Button size="small" color="primary" >
                       Edit
+                    </Button>
+                    <Button size="small"  color="primary" style={login_no===posts.m_no? writeStyle : deleteStyle} onClick={()=>this.deleteBoard(posts.b_no, posts.m_no)}>
+                      Delete
                     </Button>
                   </CardActions>
                 </Card>

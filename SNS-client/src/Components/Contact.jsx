@@ -53,9 +53,33 @@ const styles = theme => ({
 
 class Contact extends Component {
   state = {
-    name: ""
+    name: "",
+    emailEntered: '',
+    isEmailValid: false,
   };
+
+  validateEmail = emailEntered => {
+    const emailRegExp = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/;
+  
+    if (emailEntered.match(emailRegExp)) {
+      this.setState({
+        isEmailValid: true,
+        emailEntered
+      });
+    } else {
+      this.setState({
+        isEmailValid: false,
+        emailEntered
+      });
+    }
+  };
+
   memberInsert = () => {
+    if(!this.nameE.value || !this.emailE_Contact.value || !this.pwE_Contact.value){
+      alert("필수 항목을 입력하세요");
+      return;
+    }
+
     const send_param = {
       headers,
       name: this.nameE.value,
@@ -68,7 +92,9 @@ class Contact extends Component {
       .post("http://localhost:8080/member/insert", send_param)
       .then(returnData => {
         alert(returnData.data.message);
+        if(returnData.data.href){
         window.location.href = "/login#/login";
+       }
       })
       .catch(err => {
         console.log(err);
@@ -109,11 +135,14 @@ class Contact extends Component {
                 variant="outlined"
                 required
                 fullWidth
+                error={!this.state.isEmailValid}
+                helperText={this.state.isEmailValid ? "유효한 이메일입니다." : "이메일이 유효하지 않습니다." }
                 id="email"
                 inputRef={ref => (this.emailE_Contact = ref)}
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={e => this.validateEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>

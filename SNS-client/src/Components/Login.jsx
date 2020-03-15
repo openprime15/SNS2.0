@@ -61,31 +61,45 @@ class Login extends Component {
 
 
   memberLogin = () => {
-    const send_param = {
-      headers,
-      email: this.emailE_Login.value,
-      pw: this.pwE_Login.value
-    };
-    axios
-      .post("http://localhost:8080/member/login", send_param)
-      .then(returnData => {
-        if (returnData.data.email) {
-          $.cookie("login_email", returnData.data.email);
-          $.cookie("login_no", returnData.data.no);
-          $.cookie("login_name", returnData.data.name);
-          alert(returnData.data.message);
 
-          this.setState({
-            login_email: returnData.data.email
-          });
-          window.location.href="/";
-        } else {
-          alert("로그인 실패");
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    if(!this.emailE_Login.value || !this.pwE_Login.value){
+      alert("빈칸을 입력하세요");
+      return;
+    }
+    const emailRegExp = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/;
+  
+    if (this.emailE_Login.value.match(emailRegExp)) {
+  
+      const send_param = {
+        headers,
+        email: this.emailE_Login.value,
+        pw: this.pwE_Login.value
+      };
+      axios
+        .post("http://localhost:8080/member/login", send_param)
+        .then(returnData => {
+          if (returnData.data.email) {
+            $.cookie("login_email", returnData.data.email);
+            $.cookie("login_no", returnData.data.no);
+            $.cookie("login_name", returnData.data.name);
+            alert(returnData.data.message);
+  
+            this.setState({
+              login_email: returnData.data.email
+            });
+            window.location.href="/";
+          } else {
+            alert("로그인 실패");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });    
+    } else {
+      alert("이메일 형식이 유효하지 않습니다.");
+    }
+
+
   };
 
   render() {

@@ -51,16 +51,34 @@ router.post("/insert", (req, res) => {
   const pw = req.body.pw;
   const comments = req.body.comments;
 
-  var sql = `INSERT INTO members (name,email,pw,comments) VALUES (?, ?,?,?)`;
-  con.query(sql, [name, email, pw, comments], function(err, result) {
+  let sql = `SELECT * FROM members WHERE email = ?`;
+   con.query(sql, [email], function(err, result) {
     if (err) {
       console.log(err);
       res.json({ message: false });
     } else {
-      console.log("1 record inserted");
-      res.json({ message: name + "님 회원가입 환영합니다." });
+      if (result[0]) {
+        res.json({
+          message: "아이디가 중복됩니다.",
+          href: false
+        });
+      }else{
+          sql = `INSERT INTO members (name,email,pw,comments) VALUES (?, ?,?,?)`;
+          con.query(sql, [name, email, pw, comments], function(err, result) {
+           if (err) {
+             console.log(err);
+             res.json({ message: false });
+           } else {
+             console.log("1 record inserted");
+             res.json({ message: name + "님 회원가입 환영합니다.", href: true });
+           }
+         });
+        
+      }
     }
   });
+
+
 });
 
 module.exports = router;
