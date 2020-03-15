@@ -50,6 +50,7 @@ class MenuContainer extends Component {
         if (returnData.data.message) {
           $.removeCookie("login_email");
           $.removeCookie("login_no");
+          $.removeCookie("login_name");
 
           this.setState({
             login_email: "",
