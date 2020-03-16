@@ -10,7 +10,7 @@ class Chatting extends Component {
   };
 
   startChat = () => {
-    webSocket = new WebSocket("ws://localhost:8080");
+    webSocket = new WebSocket("ws://localhost:8081");
     // onopen: 소켓에 연결
     webSocket.onopen = function() {
       if (chatId) {

@@ -30,8 +30,8 @@ app.use(
 app.use("/member", memberRouter);
 app.use("/board", boardRouter);
 
-const server=app.listen(8080, () => {
-  console.log("8080 server ready..");
+const server = app.listen(8081, () => {
+  console.log("8081 server ready..");
 });
 
 const a = require("./socket");
